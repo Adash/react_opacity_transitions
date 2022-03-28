@@ -5,25 +5,26 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 const FeaturedTitlesContainer = styled.div`
   margin-top: 21px;
   width: 290px;
+  height: 100%;
+`;
+
+const TransitionContainer = styled.div`
+  position: relative;
 `;
 
 const StyledFeaturedTitlesWidget = styled.div`
   border: 1px solid #707070;
-  position: relative;
-  min-height: 300px;
+  position: absolute;
   height: auto;
   border-radius: 8px;
   background: white;
   display: flex;
   flex-direction: column;
-  padding: 370px 31px 31px 31px;
+  align-items: center;
+  padding: 31px 31px 31px 31px;
 `;
 
 const ImageContainer = styled.div`
-  display: block;
-  position: absolute;
-  top: 25px;
-  left: 33px;
   box-sizing: border-box;
   background-color: #f6f8fa;
   box-shadow: 3px 3px 6px #00000029;
@@ -35,6 +36,9 @@ const ImageContainer = styled.div`
   align-items: center;
   padding: 36px 40px 28px 40px;
   gap: 31px;
+  margin-right: 0;
+  margin-left: 0;
+  margin-bottom: 10px;
 
   img {
     width: 120px;
@@ -94,42 +98,6 @@ const data = [
   },
 ];
 
-function TransitioningElement({ currentElement }) {
-  // useEffect(() => {
-  //   console.log('useEffect triggered');
-  //   console.log(currentElement.title);
-  //   console.log(transitionRef.current);
-  //   transitionRef.current.style.opacity = '1';
-  //   return () => {
-  //     console.log('component unmounted');
-  //     transitionRef.current.style.opacity = '0';
-  //   };
-  // });
-  return (
-    <>
-      <TransitionGroup>
-        <CSSTransition
-          key={currentElement.title}
-          timeout={1000}
-          classNames="messageout"
-        >
-          <ImageContainer>
-            <img
-              src={currentElement.imageUrl}
-              alt="featured titles book cover"
-            />
-            <span>{currentElement.title}</span>
-          </ImageContainer>
-        </CSSTransition>
-      </TransitionGroup>
-      <RatingContainer>
-        ⭐️⭐️⭐️⭐️ <span>{currentElement.author}</span>
-      </RatingContainer>
-      <ReviewContainer>{currentElement.description}</ReviewContainer>
-    </>
-  );
-}
-
 function FeaturedTitles() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [numSlides] = useState(data.length);
@@ -152,27 +120,31 @@ function FeaturedTitles() {
 
   return (
     <FeaturedTitlesContainer>
-      <StyledFeaturedTitlesWidget>
+      <TransitionContainer>
         <TransitionGroup>
           <CSSTransition
             key={data[currentSlide].title}
             timeout={1000}
             classNames="messageout"
           >
-            <ImageContainer>
-              <img
-                src={data[currentSlide].imageUrl}
-                alt="featured titles book cover"
-              />
-              <span>{data[currentSlide].title}</span>
-            </ImageContainer>
+            <StyledFeaturedTitlesWidget>
+              <ImageContainer>
+                <img
+                  src={data[currentSlide].imageUrl}
+                  alt="featured titles book cover"
+                />
+                <span>{data[currentSlide].title}</span>
+              </ImageContainer>
+              <RatingContainer>
+                ⭐️⭐️⭐️⭐️ <span>{data[currentSlide].author}</span>
+              </RatingContainer>
+              <ReviewContainer>
+                {data[currentSlide].description}
+              </ReviewContainer>
+            </StyledFeaturedTitlesWidget>
           </CSSTransition>
         </TransitionGroup>
-        <RatingContainer>
-          ⭐️⭐️⭐️⭐️ <span>{data[currentSlide].author}</span>
-        </RatingContainer>
-        <ReviewContainer>{data[currentSlide].description}</ReviewContainer>
-      </StyledFeaturedTitlesWidget>
+      </TransitionContainer>
     </FeaturedTitlesContainer>
   );
 }
